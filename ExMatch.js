@@ -1,4 +1,4 @@
-const isObject = require('lodash/isObject');
+const _isObject = require('lodash/isObject');
 const extend = require('lodash/extend');
 const isString = require('lodash/isString');
 const defaults = require('lodash/defaults');
@@ -6,7 +6,7 @@ const each = require('lodash/each');
 const bind = require('lodash/bind');
 const every = require('lodash/every');
 const keys = require('lodash/keys');
-const isArray = require('lodash/isArray');
+const _isArray = require('lodash/isArray');
 const isFunction = require('lodash/isFunction');
 const some = require('lodash/some');
 const includes = require('lodash/includes');
@@ -59,11 +59,11 @@ var ExMatch = exports.ExMatch = function ExMatch(match, values, opts) {
 	}
 
 	/*If there is not a match object assume true */
-	if (!isObject(match)) {
+	if (!_isObject(match)) {
 		return true;
 	}
 	/* If no values assume false */
-	if (!isObject(values)) {
+	if (!_isObject(values)) {
 		return false;
 	}
 
@@ -133,7 +133,7 @@ extend(ExMatch.prototype, {
 	setDefaults: function (opts) {
 		var options = {};
 		/* user defaults */
-		if (!isObject(opts)) {
+		if (!_isObject(opts)) {
 			if (opts) {
 				options.debug = opts;
 			}
@@ -167,7 +167,7 @@ extend(ExMatch.prototype, {
 	 */
 	addSearchParams: function (match) {
 
-		if (!isObject(match)) {
+		if (!_isObject(match)) {
 			return true;
 		}
 
@@ -220,7 +220,7 @@ extend(ExMatch.prototype, {
 						keepTheStrings.push(item);
 
 					} else {
-						if (isObject(item)) {
+						if (_isObject(item)) {
 							exp = this.isExp(keys(item)[0]);
 							if (!exp) {
 								return true;
@@ -241,7 +241,7 @@ extend(ExMatch.prototype, {
 
 				if (keepTheStrings.length > 0) {
 					var newObj = {}
-					var newExp = isArray(this.searchFields[key]) ? '$in' : '$or';
+					var newExp = _isArray(this.searchFields[key]) ? '$in' : '$or';
 					newObj[newExp] = {};
 					newObj[newExp][key] = keepTheStrings;
 					if (this.debug) {
@@ -262,7 +262,7 @@ extend(ExMatch.prototype, {
 				/* we have an expression so run */
 				setSearchObject(exp);
 				/* we accept arrays for expressions so loop through and add each object to the routine */
-				if (isArray(val) && this.isExp(key)) {
+				if (_isArray(val) && this.isExp(key)) {
 
 					if (this.debug) {
 						console.log(key + ' val isArray so loop');
@@ -270,7 +270,7 @@ extend(ExMatch.prototype, {
 					//return pushVal(exp,val,key);
 
 					each(val, bind(function (obj) {
-						if (!isObject(obj)) {
+						if (!_isObject(obj)) {
 							/* this is a string in an Array so we assume it is a field name that should be boolean true */
 							var ret = {};
 							ret[obj] = true;
@@ -293,7 +293,7 @@ extend(ExMatch.prototype, {
 					}
 					pushVal(exp, retObj, key);
 
-				} else if (isObject(val)) {
+				} else if (_isObject(val)) {
 					if (this.debug) {
 						console.log('PUSH object', val);
 					}
@@ -347,9 +347,9 @@ extend(ExMatch.prototype, {
 			var key = keys(obj)[0];
 
 			/* is the first item an object */
-			var isObject = isObject(obj[key]);
+			var isObject = _isObject(obj[key]);
 			/* maybe an array */
-			var isArray = isArray(obj[key]);
+			var isArray = _isArray(obj[key]);
 			/* could be a simple array on a value key */
 			//var isArrayOnPlain = ( isArray && !this.isExp(parentKey)) ? true : false;
 			var isArrayOnPlain = (isArray) ? true : false;
@@ -451,7 +451,7 @@ extend(ExMatch.prototype, {
 	match: function () {
 
 		/* If we dont have a _search object  are we still true?  since we did nothing false? */
-		if (!isObject(this._search)) {
+		if (!_isObject(this._search)) {
 			return true;
 		}
 		if (!this.searchFields) {
@@ -460,7 +460,7 @@ extend(ExMatch.prototype, {
 		/* loop the _search object and run all the requested searches */
 		var ret = every(this._search, bind(function (val) {
 
-			if (!isArray(val.search) || val.search.length < 1) {
+			if (!_isArray(val.search) || val.search.length < 1) {
 				if (this.debug || this.debugComparison) {
 					console.log('val.search is not an array.. return true', val.search, val);
 				}
@@ -592,7 +592,7 @@ extend(ExMatch.prototype, {
 	},
 	reset: function (exp) {
 		if (exp) {
-			if (isObject(this._search[exp])) {
+			if (_isObject(this._search[exp])) {
 				this._search[exp] = {};
 			}
 		} else {
@@ -657,7 +657,7 @@ extend(ExMatch.prototype, {
 	 */
 	/* and */
 	$and: function () {
-		if (!isObject(this._search.$and)) {
+		if (!_isObject(this._search.$and)) {
 			if (this.debug) {
 				console.log('Tried to run and without $and object set');
 			}
@@ -668,7 +668,7 @@ extend(ExMatch.prototype, {
 	},
 	/* any */
 	$any: function () {
-		if (!isObject(this._search.$any)) {
+		if (!_isObject(this._search.$any)) {
 			if (this.debug) {
 				console.log('Tried to run any without $any object set');
 			}
@@ -679,7 +679,7 @@ extend(ExMatch.prototype, {
 	},
 	/* eq */
 	$eq: function () {
-		if (!isObject(this._search.$eq)) {
+		if (!_isObject(this._search.$eq)) {
 			if (this.debug) {
 				console.log('Tried to run eq without $eq object set');
 			}
@@ -704,7 +704,7 @@ extend(ExMatch.prototype, {
 	},
 	/* falsey */
 	$falsey: function () {
-		if (!isObject(this._search.$falsey)) {
+		if (!_isObject(this._search.$falsey)) {
 			if (this.debug) {
 				console.log('Tried to run falsey without $falsey object set');
 			}
@@ -728,7 +728,7 @@ extend(ExMatch.prototype, {
 	$falsy: this.$falsey,
 	/* greater than */
 	$gt: function () {
-		if (!isObject(this._search.$gt)) {
+		if (!_isObject(this._search.$gt)) {
 			if (this.debug) {
 				console.log('Tried to run gt without $gt object set');
 			}
@@ -751,7 +751,7 @@ extend(ExMatch.prototype, {
 	/* greater than or equal*/
 	$gte: function () {
 
-		if (!isObject(this._search.$gte)) {
+		if (!_isObject(this._search.$gte)) {
 			if (this.debug) {
 				console.log('Tried to run gte without $gte object set');
 			}
@@ -773,7 +773,7 @@ extend(ExMatch.prototype, {
 	},
 	/* in */
 	$in: function () {
-		if (!isObject(this._search.$in)) {
+		if (!_isObject(this._search.$in)) {
 			if (this.debug) {
 				console.log('Tried to run in without $in object set');
 			}
@@ -796,7 +796,7 @@ extend(ExMatch.prototype, {
 	},
 	/* less than */
 	$lt: function () {
-		if (!isObject(this._search.$lt)) {
+		if (!_isObject(this._search.$lt)) {
 			if (this.debug) {
 				console.log('Tried to run lt without $lt object set');
 			}
@@ -818,7 +818,7 @@ extend(ExMatch.prototype, {
 	},
 	/* less than or equal */
 	$lte: function () {
-		if (!isObject(this._search.$lte)) {
+		if (!_isObject(this._search.$lte)) {
 			if (this.debug) {
 				console.log('Tried to run lte without $lte object set');
 			}
@@ -840,7 +840,7 @@ extend(ExMatch.prototype, {
 	},
 	/* ne */
 	$ne: function () {
-		if (!isObject(this._search.$ne)) {
+		if (!_isObject(this._search.$ne)) {
 			if (this.debug) {
 				console.log('Tried to run ne without $ne object set');
 			}
@@ -858,7 +858,7 @@ extend(ExMatch.prototype, {
 	},
 	/* not */
 	$not: function () {
-		if (!isObject(this._search.$not)) {
+		if (!_isObject(this._search.$not)) {
 			if (this.debug) {
 				console.log('Tried to run not without $not object set');
 			}
@@ -873,7 +873,7 @@ extend(ExMatch.prototype, {
 	},
 	/* or */
 	$or: function () {
-		if (!isObject(this._search.$or)) {
+		if (!_isObject(this._search.$or)) {
 			if (this.debug) {
 				console.log('Tried to run or without $or object set');
 			}
@@ -884,7 +884,7 @@ extend(ExMatch.prototype, {
 	},
 	/* regex */
 	$regex: function () {
-		if (!isObject(this._search.$regex)) {
+		if (!_isObject(this._search.$regex)) {
 			if (this.debug) {
 				console.log('Tried to run regex without $regex object set');
 			}
@@ -912,7 +912,7 @@ extend(ExMatch.prototype, {
 	},
 	/* truthy */
 	$truthy: function () {
-		if (!isObject(this._search.$truthy)) {
+		if (!_isObject(this._search.$truthy)) {
 			if (this.debug) {
 				console.log('Tried to run truthy without $truthy object set');
 			}
@@ -942,7 +942,7 @@ function expressionMethods(expressions) {
 
 	expressions.forEach(function (exp) {
 		ExMatch.prototype[exp] = function (pattern) {
-			if (!isObject(pattern)) {
+			if (!_isObject(pattern)) {
 				return false;
 			}
 			var newExp = {};
@@ -956,9 +956,9 @@ function expressionMethods(expressions) {
 }
 
 function ensureArray(val) {
-	return (isArray(val)) ? val : [val];
+	return (_isArray(val)) ? val : [val];
 }
 
 function ensureArrayOrObject(obj) {
-	return (isArray(obj) || isObject(obj)) ? obj : [obj];
+	return (_isArray(obj) || _isObject(obj)) ? obj : [obj];
 }
